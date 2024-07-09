@@ -1,0 +1,24 @@
+version: '3'
+services:
+  datadog:
+    image: datadog/agent:latest
+    env_file: .env
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_APM_DD_URL=${DD_APM_DD_URL}
+      - DD_SITE=${DD_SITE}
+      - DD_APM_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_LOGS_CONFIG_DOCKER_CONTAINER_USE_FILE=false
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      - DD_LOGS_INJECTION=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+    restart: always
+    ports:
+      - 8126:8126/tcp
+      - 8125:8125
