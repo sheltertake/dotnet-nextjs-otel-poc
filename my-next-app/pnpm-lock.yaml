@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@datadog/browser-rum':
+    specifier: ^5.22.0
+    version: 5.22.0
   dd-trace:
     specifier: ^5.17.0
     version: 5.17.0
@@ -50,6 +53,28 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
     dev: true
+
+  /@datadog/browser-core@5.22.0:
+    resolution: {integrity: sha512-Me7N+l+T5DyN4xnJmnxB93TWxj+u9YwMghvcqS3LLCxSj+fpG/aLlK9hvDG2uhZsnsQdiULrzlbjfekjijwunQ==}
+    dev: false
+
+  /@datadog/browser-rum-core@5.22.0:
+    resolution: {integrity: sha512-Bb5YYCm7BV92qO89s9Nk/DCO+XPbUKraxZ9WIyHfxne71yc7s3WGyvsPxkRUiir0cc9c3F21uo8jz0HTBie6sw==}
+    dependencies:
+      '@datadog/browser-core': 5.22.0
+    dev: false
+
+  /@datadog/browser-rum@5.22.0:
+    resolution: {integrity: sha512-m3fVymhjuFwEJzYDuEd5ysTV5W4KqSG+l+piFXauXOdpcgPZuKHcqsMRNHqvvzsCK767+LovM8JlON0urqJ1JQ==}
+    peerDependencies:
+      '@datadog/browser-logs': 5.22.0
+    peerDependenciesMeta:
+      '@datadog/browser-logs':
+        optional: true
+    dependencies:
+      '@datadog/browser-core': 5.22.0
+      '@datadog/browser-rum-core': 5.22.0
+    dev: false
 
   /@datadog/native-appsec@8.0.1:
     resolution: {integrity: sha512-SpWkoo7K4+pwxFze1ogRF1qBaKm8sZjWfZKnQ8Ex67f6L5odLjWOoiiIAs5rp01sLKGXjxU8IJf+X9j4PvI2zQ==}

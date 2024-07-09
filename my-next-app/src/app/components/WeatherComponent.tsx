@@ -20,7 +20,7 @@ const WeatherComponent = () => {
   const fetchWeatherData = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5131/weatherforecast');
+      const response = await fetch(process.env.API_URL + '/weatherforecast');
       const data: WeatherData[] = await response.json();
       setWeatherData(data);
     } catch (error) {
