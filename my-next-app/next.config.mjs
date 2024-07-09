@@ -8,6 +8,7 @@ const nextConfig = {
         DD_ENV: process.env.DD_ENV,
         DD_VERSION: process.env.DD_VERSION,
         API_URL: process.env.API_URL,
+        API_OTEL_URL: process.env.API_OTEL_URL,
         DD_RUM_TRACE_PROPAGATOR_TYPE: process.env.DD_RUM_TRACE_PROPAGATOR_TYPE
     }
 };

@@ -31,7 +31,8 @@ export default function Home() {
 
       <div className="relative z-100 flex place-items-center">
         {/* <WeatherForecast /> */}
-        <WeatherComponent />
+        <WeatherComponent title="DD" serviceUrl={process.env.API_URL as string} />
+        <WeatherComponent title="OTEL" serviceUrl={process.env.API_OTEL_URL as string} />
       </div>
 
       <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Definisce l'interfaccia per i dati del tempo
 interface WeatherData {
@@ -8,9 +8,13 @@ interface WeatherData {
   temperatureC: number;
   summary: string;
 }
-
+// Aggiunge l'interfaccia per le props del componente
+interface WeatherComponentProps {
+  serviceUrl: string; // URL del servizio come prop
+  title: string;
+}
 // Definisce il componente WeatherComponent
-const WeatherComponent = () => {
+const WeatherComponent : React.FC<WeatherComponentProps> = ({ serviceUrl, title }) => {
   // Stato per memorizzare i dati del tempo
   const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
   // Stato per gestire il caricamento
@@ -20,7 +24,7 @@ const WeatherComponent = () => {
   const fetchWeatherData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(process.env.API_URL + '/weatherforecast');
+      const response = await fetch(`${serviceUrl}/weatherforecast`);
       const data: WeatherData[] = await response.json();
       setWeatherData(data);
     } catch (error) {
@@ -37,7 +41,7 @@ const WeatherComponent = () => {
 
   return (
     <div>
-      <h1>Weather Data</h1>
+      <h1>{title}</h1>
       <button onClick={fetchWeatherData}>Ricarica Dati</button>
       {loading ? (
         <p>Caricamento...</p>

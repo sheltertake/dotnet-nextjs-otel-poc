@@ -18,7 +18,8 @@ datadogRum.init({
     // enableExperimentalFeatures: true,
     defaultPrivacyLevel: "mask-user-input",
     allowedTracingUrls: [
-        { match: process.env.API_URL as string, propagatorTypes: [process.env.DD_RUM_TRACE_PROPAGATOR_TYPE as any]}
+        { match: process.env.API_URL as string, propagatorTypes: [process.env.DD_RUM_TRACE_PROPAGATOR_TYPE as any]},
+        { match: process.env.API_OTEL_URL as string, propagatorTypes: ["tracecontext"]}
     ]
 });
 

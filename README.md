@@ -42,7 +42,7 @@ dotnet run
 
 ### How it works
 
-### Nextjs
+#### Nextjs
 
 Basic integration with Datadog can be achieved using the `dd-trace` npm package.
 
@@ -56,7 +56,7 @@ The module is run using the NODE_OPTIONS environment variable in the .env.local 
 NODE_OPTIONS=-r ./node_modules/dd-trace/init
 ```
 
-### Dotnet
+#### Dotnet
 
  - If you have a Datadog agent running on your host, it is sufficient to set up launchProfile.json:
 
@@ -200,3 +200,77 @@ window.DD_RUM.getInitConfiguration()
 ```
 
 
+## OTEL vs Datadog.Trace
+
+ - create a new dotnet API 
+ - setup cors
+ - add the nuget packages 
+
+ - these packages are based on these [examples](https://github.com/DataDog/opentelemetry-examples) : 
+```xml
+		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
+```
+ - TODO: read this [repo](https://github.com/open-telemetry/opentelemetry-dotnet/tree/main)
+ - once the otel packages are installed, we can instrument otel
+
+```csharp
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracerProviderBuilder =>
+        tracerProviderBuilder
+            .AddSource(DiagnosticsConfig.ActivitySource.Name)
+                        .ConfigureResource(resource => resource
+                            .AddService(DiagnosticsConfig.ServiceName))
+            .AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation()
+            .AddOtlpExporter()
+        )
+    .WithMetrics(metricsProviderBuilder => 
+        metricsProviderBuilder.ConfigureResource(configure => 
+            configure.AddService(DiagnosticsConfig.ServiceName))
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddRuntimeInstrumentation()
+        .AddOtlpExporter());
+```
+ - Looking at the examples from the datadog/otel repo, it would seem that the set of environment variables needed to make otel work are these:
+
+```plain
+    "OTEL_SERVICE_NAME": "my-api-otel",
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
+    "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
+    "OTEL_RESOURCE_ATTRIBUTES": "deployment.environment=local,host.name=localhost,foo=bar",
+    "DD_OTLP_CONFIG_TRACES_SPAN_NAME_AS_RESOURCE_NAME": "true"
+```
+ - In the Docker Compose, I added these variables
+
+ ```plain
+- DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_GRPC_ENDPOINT=0.0.0.0:4317
+- DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_HTTP_ENDPOINT=0.0.0.0:4318
+ ```
+  - and these ports
+
+ ```plain
+      - 4317:4317
+      - 4318:4318
+ ```
+
+ - For the rest, in the Next.js app, I made the WeatherComponent reusable so that it can have two instances with the service base URL passable from the parent component. I added the URL of the new service among the environment variables, and for tracing between RUM and BE, I used w3c instead of Datadog.
+
+ - observing a fetch with w3c settings, the added header is:
+```plain
+traceparent: 00-000000000000000049743ffd5e672353-7778d80a7067afcb-01
+```
+ - a fetch with datadog settings
+```plain
+x-datadog-origin: rum
+x-datadog-parent-id: 2901112022796962747
+x-datadog-sampling-priority: 1
+x-datadog-trace-id: 2052192814119684044
+```
+
+ 
