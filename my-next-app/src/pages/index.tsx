@@ -1,3 +1,4 @@
+import DatadogRumInit from "@/app/components/DatadogRumInit";
 import WeatherComponent from "@/app/components/WeatherComponent";
 import Image from "next/image";
 import Link from "next/link";
@@ -104,6 +105,7 @@ export default function Home() {
           </p>
         </a>
       </div>
+      <DatadogRumInit />
     </main>
   );
 }

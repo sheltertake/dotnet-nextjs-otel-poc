@@ -3,9 +3,6 @@
   "profiles": {
     "http": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5247",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
@@ -13,7 +10,11 @@
         "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
         "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
         "OTEL_RESOURCE_ATTRIBUTES": "deployment.environment=local,host.name=localhost,foo=bar",
-        "DD_OTLP_CONFIG_TRACES_SPAN_NAME_AS_RESOURCE_NAME": "true"
+        "DD_OTLP_CONFIG_TRACES_SPAN_NAME_AS_RESOURCE_NAME": "false",
+        "COREHOST_TRACE": "1",
+        "COREHOST_TRACEFILE": "C:\\ProgramData\\Datadog .NET Tracer\\logs\\corehost_verbose_tracing.log",
+        "OTEL_DOTNET_AUTO_LOG_DIRECTORY": "C:\\ProgramData\\Datadog .NET Tracer\\logs\\",
+        "OTEL_LOG_LEVEL": "debug"
 
       }
     }

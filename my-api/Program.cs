@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -48,6 +50,32 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
+
+app.MapGet("/custom-trace", () =>
+{
+    using (Activity? activity = MyApi.DiagnosticsConfig.ActivitySource.StartActivity("custom-trace", ActivityKind.Internal))
+    {
+        // your logic for Main activity
+        activity?.SetTag("foo", "bar1");
+
+        var _logger = app.Services.GetRequiredService<ILogger<Program>>();
+        _logger.LogInformation("Custom trace");
+    }
+
+})
+.WithName("GetWithCustomChildTrace")
+.WithOpenApi();
+
+//app.MapGet("/custom-trace", () =>
+//{
+//    using (var scope = Tracer.Instance.StartActive($"Custom trace"))
+//    {
+//        var _logger = app.Services.GetRequiredService<ILogger<Program>>();
+//        _logger.LogInformation("Custom trace");
+//    }
+//})
+//.WithName("GetWithCustomChildTrace")
+//.WithOpenApi();
 
 await app.RunAsync();
 

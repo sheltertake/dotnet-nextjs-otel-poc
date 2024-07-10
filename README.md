@@ -298,4 +298,37 @@ x-datadog-trace-id: 2052192814119684044
  ![alternative approach](docs/images/ws-datadog-trace.png)
 
  
+## Custom traces - Activity source
 
+ - with the Datadog.Trace sdk
+
+```csharp
+app.MapGet("/custom-trace", () =>
+{
+    using (var scope = Tracer.Instance.StartActive($"Custom trace"))
+    {
+        var _logger = app.Services.GetRequiredService<ILogger<Program>>();
+        _logger.LogInformation("Custom trace");
+    }
+})
+.WithName("GetWithCustomChildTrace")
+.WithOpenApi();
+```
+
+ - via ActivitySource
+   - In case you use Datadog.Trace you have to set [DD_TRACE_ACTIVITY_LISTENER_ENABLED](https://github.com/DataDog/dd-trace-dotnet/issues/2938)=true
+```csharp
+app.MapGet("/custom-trace", () =>
+{
+    using (Activity? activity = MyApi.DiagnosticsConfig.ActivitySource.StartActivity("custom-trace", ActivityKind.Internal))
+    {
+        // your logic for Main activity
+        activity?.SetTag("foo", "bar1");
+
+        var _logger = app.Services.GetRequiredService<ILogger<Program>>();
+        _logger.LogInformation("Custom trace");
+    }
+
+})
+.WithName("GetWithCustomChildTrace")
+.WithOpenApi();

@@ -2,6 +2,7 @@ using MyApiOtel;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,8 +99,23 @@ app.MapGet("/fibonacci/{n:long}", (long n) =>
 .WithName("GetFibonacci")
 .WithOpenApi();
 
+app.MapGet("/custom-trace", () =>
+{
+    using (var activity = DiagnosticsConfig.ActivitySource.StartActivity("custom-trace", ActivityKind.Internal))
+    {
 
-app.Run();
+        // your logic for Main activity
+        activity?.SetTag("foo", "bar1");
+
+        var _logger = app.Services.GetRequiredService<ILogger<Program>>();
+        _logger.LogInformation("Custom trace");
+    }
+    
+})
+.WithName("GetWithCustomChildTrace")
+.WithOpenApi();
+
+await app.RunAsync();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
