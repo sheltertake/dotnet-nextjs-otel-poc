@@ -1,0 +1,23 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5262",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DD_TRACE_AGENT_URL": "http://localhost:8126",
+        "DD_ENV": "localhost",
+        "DD_SERVICE": "chat",
+        "DD_VERSION": "V1",
+        "DD_LOGS_INJECTION": "true",
+        "DD_DOGSTATSD_NON_LOCAL_TRAFFIC": "true",
+        "DD_TRACE_DEBUG": "true",
+        "DD_PROFILING_ENABLED": "false",
+        "DD_RUNTIME_METRICS_ENABLED": "true",
+        "CORECLR_ENABLE_PROFILING": "1",
+        "CORECLR_PROFILER": "{846F5F1C-F9AE-4B07-969E-05C26BC060D8}",
+      }
+    }
+  }
+}

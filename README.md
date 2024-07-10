@@ -273,4 +273,29 @@ x-datadog-sampling-priority: 1
 x-datadog-trace-id: 2052192814119684044
 ```
 
+
+## Datadog - WebSockets traces
+
+- Created a new .NET API with a basic chat implementation.
+- Modified the Next.js app with a page structure.
+  - Added a chat.tsx component to interact with the chat API.
+- Set up Datadog for the .NET API (launch profile environment variables).
+- Installed Datadog.Trace to create custom traces in the WebSocket middleware.
+  - TODO: Create custom traces in an agnostic manner without being locked into Datadog.
+- The Next.js app opens a connection via WebSocket to the .NET API.
+- A new span is created for each message sent.
+- When the connection is closed, the span related to each message and the parent span related to the .NET request are sent to the agent.
+- Child spans are not sent until the parent span is open.
+- Check [datadog logs](https://docs.datadoghq.com/tracing/troubleshooting/tracer_debug_logs/?code-lang=dotnet) in 	%ProgramData%\Datadog .NET Tracer\logs\ to understand how the process flush the traces
+
+ - In this image is visible what happen when the connection is closed
+ ![logs.png](docs/images/logs.png)
+
+ - in this image is visible the websocket root traces and the child. All are sent only when the connection is closd
+ ![ws-root-traces.png](docs/images/ws-root-traces.png) ![ws-child-traces.png](docs/images/ws-child-traces.png)
+
+ - In alternative another approach could be close the parent span every time we create a span for the message received
+ ![alternative approach](docs/images/ws-datadog-trace.png)
+
  
+
